@@ -40,28 +40,18 @@
 
     <script>
         function postHeight() {
-            const img = document.querySelector('img');
-            const height = img ? img.offsetHeight : document.body.scrollHeight;
             window.parent.postMessage(
                 {
                     provider: "DAVIZ",
                     type: "embed-size",
-                    height: height,
+                    height: document.querySelector("body").clientHeight,
                 },
-                "*",
+                "*"
             );
+            requestAnimationFrame(postHeight);
         }
-
-        // Wait for image to load before posting height
-        const img = document.querySelector('img');
-        if (img.complete) {
-            postHeight();
-        } else {
-            img.addEventListener('load', postHeight);
-        }
-
-        const observer = new ResizeObserver(postHeight);
-        observer.observe(document.body);
+        new ResizeObserver(postHeight).observe(document.body);
+        requestAnimationFrame(postHeight);
     </script>
 </body>
 </html>
