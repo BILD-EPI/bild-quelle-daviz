@@ -34,25 +34,34 @@
     </style>
 </head>
 <body>
-    <a href="https://www.google.com/preferences/source?q=https://www.bild.de/" class="image-button">
+    <a href="https://www.google.com/preferences/source?q=https://www.bild.de/" class="image-button" target="_blank" rel="noopener noreferrer">
         <img src="bildquellebanner.png" alt="Bild Quelle Banner">
     </a>
 
     <script>
         function postHeight() {
+            const img = document.querySelector('img');
+            const height = img ? img.offsetHeight : document.body.scrollHeight;
             window.parent.postMessage(
                 {
                     provider: "DAVIZ",
                     type: "embed-size",
-                    height: document.body.clientHeight,
+                    height: height,
                 },
                 "*",
             );
         }
 
+        // Wait for image to load before posting height
+        const img = document.querySelector('img');
+        if (img.complete) {
+            postHeight();
+        } else {
+            img.addEventListener('load', postHeight);
+        }
+
         const observer = new ResizeObserver(postHeight);
         observer.observe(document.body);
-        postHeight();
     </script>
 </body>
 </html>
